@@ -50,7 +50,7 @@ void findAt(int x, int z)
             }
         }
         if (golemCounter >= minGolems)
-            printf("%d villages; ", golemCounter);
+            printf("%d villages; ", currentVillages);
     }
     if (golemCounter >= minGolems)
     {
