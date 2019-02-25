@@ -23,13 +23,14 @@ void findAt(int x, int z)
     int rdSide = renderDistance * 2 + 1;
     nextIntLoopP2(&seed, rdSide * rdSide); // (2n+1)^2 x nextInt(16)
 
-    /* PER VILLAGE */
-    int maxVillages = 1000;
-    int minGolems = 10;
+    /* ===== PER VILLAGE ===== */
+
+    int maxVillages = 5000;
+    int minGolems = 7;
 
     int golemCounter = 0;
 
-    for (int i = 0; i < maxVillages; ++i)
+    for (int currentVillages = 1; currentVillages <= maxVillages; ++currentVillages)
     {
         // removeDeadAndOutOfRangeDoors
         nextInt(&seed, 50);
@@ -40,30 +41,25 @@ void findAt(int x, int z)
             ++golemCounter;
 
             // Golem coords
-            int golemX, golemY = 2, golemZ;
 
             for (int j = 0; j < 10; ++j) // 10 attempts to spawn a golem
             {
-                int dx = nextIntP2(&seed, 16) - 8;
-                int dy = nextInt(&seed, 6) - 3;
-                int dz = nextIntP2(&seed, 16) - 8;
-
-                if (dy <= golemY) // if this blockPos is lower than golemY
-                {
-                    golemX = dx;
-                    golemY = dy;
-                    golemZ = dz;
-                }
+                nextIntP2(&seed, 16);
+                nextInt(&seed, 6);
+                nextIntP2(&seed, 16);
             }
-
-            // Block coords
-            int fromX = x * 1280;
-            int fromZ = z * 1280;
-            int toX = fromX + 1280;
-            int toZ = fromZ + 1280;
-
-            printf("from %d %d to %d %d; %d %d %d\n", fromX, fromZ, toX, toZ, golemX, golemY, golemZ);
         }
+        if (golemCounter >= minGolems)
+            printf("%d villages; ", golemCounter);
+    }
+    if (golemCounter >= minGolems)
+    {
+        int fromX = x * 1280;
+        int fromZ = z * 1280;
+        int toX = fromX + 1280;
+        int toZ = fromZ + 1280;
+
+        printf("from %d %d to %d %d; %d golems\n", fromX, fromZ, toX, toZ, golemCounter);
         stop = true;
     }
 }
@@ -76,10 +72,17 @@ void seedloop()
     int dj = 0;
     int segmentLength = 1;
     int segmentPassed = 0;
+    long long regionCounter = 0;
+
     while ((x < radius) && (!stop))
     {
         seed = 544LL;
         findAt(x, z);
+
+        ++regionCounter;
+        if (regionCounter % 5000 == 0)
+            printf("%d regions...\n", regionCounter);
+
         x += di;
         z += dj;
 
