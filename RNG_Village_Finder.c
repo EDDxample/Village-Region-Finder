@@ -23,25 +23,47 @@ void findAt(int x, int z)
     int rdSide = renderDistance * 2 + 1;
     nextIntLoopP2(&seed, rdSide * rdSide); // (2n+1)^2 x nextInt(16)
 
-    // removeDeadAndOutOfRangeDoors
-    nextInt(&seed, 50);
+    /* PER VILLAGE */
+    int maxVillages = 1000;
+    int minGolems = 10;
 
-    // spawnGolems
-    if (nextInt(&seed, 7000) == 0)
+    int golemCounter = 0;
+
+    for (int i = 0; i < maxVillages; ++i)
     {
+        // removeDeadAndOutOfRangeDoors
+        nextInt(&seed, 50);
 
-        // Golem coords
-        int golemX = nextIntP2(&seed, 16) - 8;
-        int golemY = nextInt(&seed, 6) - 3;
-        int golemZ = nextIntP2(&seed, 16) - 8;
+        // spawnGolems
+        if (nextInt(&seed, 7000) == 0)
+        {
+            ++golemCounter;
 
-        // Block coords
-        int fromX = x * 1280;
-        int fromZ = z * 1280;
-        int toX = fromX + 1280;
-        int toZ = fromZ + 1280;
+            // Golem coords
+            int golemX, golemY = 2, golemZ;
 
-        printf("from %d %d to %d %d; %d %d %d\n", fromX, fromZ, toX, toZ, golemX, golemY, golemZ);
+            for (int j = 0; j < 10; ++j) // 10 attempts to spawn a golem
+            {
+                int dx = nextIntP2(&seed, 16) - 8;
+                int dy = nextInt(&seed, 6) - 3;
+                int dz = nextIntP2(&seed, 16) - 8;
+
+                if (dy <= golemY) // if this blockPos is lower than golemY
+                {
+                    golemX = dx;
+                    golemY = dy;
+                    golemZ = dz;
+                }
+            }
+
+            // Block coords
+            int fromX = x * 1280;
+            int fromZ = z * 1280;
+            int toX = fromX + 1280;
+            int toZ = fromZ + 1280;
+
+            printf("from %d %d to %d %d; %d %d %d\n", fromX, fromZ, toX, toZ, golemX, golemY, golemZ);
+        }
         stop = true;
     }
 }
