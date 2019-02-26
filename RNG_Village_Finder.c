@@ -5,6 +5,7 @@
 
 bool stop;
 const int radius = 23437;
+int lowerVillage = 100000;
 int64_t seed = 544LL;
 
 void findAt(int x, int z)
@@ -29,7 +30,7 @@ void findAt(int x, int z)
     int golemCounter = 0;
     int villageCounter = 0;
 
-    while (golemCounter <= minGolems && villageCounter <= 4000)
+    while (golemCounter <= minGolems && villageCounter <= lowerVillage)
     {
         ++villageCounter;
         // removeDeadAndOutOfRangeDoors
@@ -45,10 +46,11 @@ void findAt(int x, int z)
         }
     }
 
-    if (villageCounter <= 4000)
-        printf("region: %d %d; %d villages\n", x, z, villageCounter);
-    if (villageCounter <= 1000)
-        stop = true;
+    if (villageCounter < lowerVillage)
+    {
+        lowerVillage = villageCounter;
+        printf("%d villages; region: %d %d\n", villageCounter, x, z);
+    }
 }
 
 void seedloop()
@@ -67,7 +69,7 @@ void seedloop()
         findAt(x, z);
 
         ++regionCounter;
-        if (regionCounter % 100000 == 0)
+        if (regionCounter % 500000 == 0)
             printf("%d regions...\n", regionCounter);
 
         x += di;

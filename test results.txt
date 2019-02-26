@@ -1,0 +1,3 @@
+10 golems; seed: 544
+2000000 regions...
+10170 villages; region: -667 730
