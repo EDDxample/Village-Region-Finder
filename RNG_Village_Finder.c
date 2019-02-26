@@ -24,14 +24,14 @@ void findAt(int x, int z)
     nextIntLoopP2(&seed, rdSide * rdSide); // (2n+1)^2 x nextInt(16)
 
     /* ===== PER VILLAGE ===== */
-
-    int maxVillages = 5000;
-    int minGolems = 7;
+    int minGolems = 10;
 
     int golemCounter = 0;
+    int villageCounter = 0;
 
-    for (int currentVillages = 1; currentVillages <= maxVillages; ++currentVillages)
+    while (golemCounter <= minGolems && villageCounter <= 4000)
     {
+        ++villageCounter;
         // removeDeadAndOutOfRangeDoors
         nextInt(&seed, 50);
 
@@ -39,29 +39,16 @@ void findAt(int x, int z)
         if (nextInt(&seed, 7000) == 0)
         {
             ++golemCounter;
-
-            // Golem coords
-
-            for (int j = 0; j < 10; ++j) // 10 attempts to spawn a golem
-            {
-                nextIntP2(&seed, 16);
-                nextInt(&seed, 6);
-                nextIntP2(&seed, 16);
-            }
+            nextIntP2(&seed, 16);
+            nextInt(&seed, 6);
+            nextIntP2(&seed, 16);
         }
-        if (golemCounter >= minGolems)
-            printf("%d villages; ", currentVillages);
     }
-    if (golemCounter >= minGolems)
-    {
-        int fromX = x * 1280;
-        int fromZ = z * 1280;
-        int toX = fromX + 1280;
-        int toZ = fromZ + 1280;
 
-        printf("from %d %d to %d %d; %d golems\n", fromX, fromZ, toX, toZ, golemCounter);
+    if (villageCounter <= 4000)
+        printf("region: %d %d; %d villages\n", x, z, villageCounter);
+    if (villageCounter <= 1000)
         stop = true;
-    }
 }
 
 void seedloop()
@@ -80,7 +67,7 @@ void seedloop()
         findAt(x, z);
 
         ++regionCounter;
-        if (regionCounter % 5000 == 0)
+        if (regionCounter % 100000 == 0)
             printf("%d regions...\n", regionCounter);
 
         x += di;
